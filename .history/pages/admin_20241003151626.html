@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hotel Admin - Manage Rooms</title>
+    <link href="../dist/output.css" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-100">
+    <header class="bg-blue-500 p-4 text-white">
+      <h1 class="text-center text-2xl">Hotel Admin - Manage Rooms</h1>
+    </header>
+
+    <div class="container mx-auto mt-8">
+      <div class="flex">
+        <aside class="w-1/4 bg-gray-200 p-4">
+          <nav>
+            <ul>
+              <li><a href="admin.html" class="block py-2">Manage Rooms</a></li>
+              <li><a href="../index.html" class="block py-2">Back to Homepage</a></li>
+            </ul>
+          </nav>
+        </aside>
+        <main class="w-3/4 p-4">
+          <h2 class="text-xl mb-4">Rooms List</h2>
+          <button id="add-room-btn" class="bg-green-500 text-white px-4 py-2 mb-4">Add Room</button>
+          <div id="rooms-admin-list">
+            <!-- Danh sách các phòng sẽ hiển thị tại đây -->
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/main.js"></script>
+  </body>
+</html>
