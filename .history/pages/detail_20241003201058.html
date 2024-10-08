@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Room Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white py-4">
+      <div class="container mx-auto px-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+          <img src="../assets/images/logo.png" alt="Luxury Hotel Logo" class="w-10 h-10" />
+          <h1 class="text-2xl font-bold">Luxury Hotel</h1>
+        </div>
+        <nav>
+          <ul class="flex space-x-4">
+            <li><a href="../index.html" class="hover:text-blue-200">Home</a></li>
+            <li><a href="admin.html" class="hover:text-blue-200">Admin Page</a></li>
+            <li><a href="#" class="hover:text-blue-200">Amenities</a></li>
+            <li><a href="#" class="hover:text-blue-200">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto mt-8 p-4">
+      <div id="room-detail" class="bg-white rounded-lg shadow-lg p-8">
+        <!-- Room details will be dynamically inserted here -->
+      </div>
+    </main>
+
+    <script>
+      // Lấy room ID từ URL
+      const params = new URLSearchParams(window.location.search);
+      const roomId = params.get("id");
+
+      // Function để lấy dữ liệu của phòng từ localStorage dựa trên roomId
+      function getRoomDetails(roomId) {
+        const rooms = JSON.parse(localStorage.getItem("hotelRooms")) || [];
+        return rooms.find((room) => room.id === roomId);
+      }
+
+      // Hiển thị thông tin chi tiết của phòng
+      function renderRoomDetails() {
+        const roomDetailDiv = document.getElementById("room-detail");
+        const room = getRoomDetails(roomId);
+
+        if (room) {
+          roomDetailDiv.innerHTML = `
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+              <div>
+                <img src="${
+                  room.imageUrl.startsWith("assets") ? (room.imageUrl = `../${room.imageUrl}`) : room.imageUrl
+                }" alt="${room.name}" class="w-full h-02 object-cover rounded-lg shadow-lg">
+              </div>
+              <div class="flex flex-col justify-between">
+                <div>
+                  <h2 class="text-4xl font-extrabold text-gray-800 mb-4">${room.name}</h2>
+                  <p class="text-gray-600 text-lg mb-6">${room.description}</p>
+                  <p class="text-3xl font-semibold text-blue-600 mb-4">${room.price.toLocaleString()}₫</p>
+                  <ul class="list-disc list-inside text-gray-600 text-lg space-y-2">
+                    <li>Free Wi-Fi</li>
+                    <li>King-sized bed</li>
+                    <li>Ocean view</li>
+                    <li>Breakfast included</li>
+                  </ul>
+                </div>
+                <button class="bg-green-500 text-white px-8 py-4 rounded-lg mt-6 hover:bg-green-600 transition-colors text-xl font-semibold">
+                  Book Now
+                </button>
+              </div>
+            </div>
+            <div class="mt-12">
+              <h3 class="text-2xl font-bold text-gray-800 mb-4">Customer Reviews</h3>
+              <div class="bg-gray-50 p-6 rounded-lg shadow-md space-y-4">
+                <div class="flex items-center space-x-4">
+                  <div class="bg-blue-500 w-12 h-12 rounded-full text-white flex items-center justify-center">
+                    J
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800">John Doe</p>
+                    <p class="text-sm text-gray-600">"Amazing room, very clean and the view was spectacular!"</p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <div class="bg-green-500 w-12 h-12 rounded-full text-white flex items-center justify-center">
+                    M
+                  </div>
+                  <div>
+                    <p class="font-semibold text-gray-800">Mary Jane</p>
+                    <p class="text-sm text-gray-600">"Comfortable stay and excellent service!"</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          roomDetailDiv.innerHTML = "<p class='text-center text-gray-600'>Room not found.</p>";
+        }
+      }
+
+      // Khi trang được load, hiển thị chi tiết phòng
+      document.addEventListener("DOMContentLoaded", renderRoomDetails);
+    </script>
+  </body>
+</html>

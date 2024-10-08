@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxury Hotel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 flex flex-col min-h-screen">
+    <header class="bg-blue-600 text-white py-4">
+      <div class="container mx-auto px-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+          <img src="assets/images/logo.png" alt="Luxury Hotel Logo" class="w-10 h-10" />
+          <h1 class="text-2xl font-bold">Luxury Hotel</h1>
+        </div>
+        <nav>
+          <ul class="flex space-x-4">
+            <li><a href="#" class="hover:text-blue-200">Home</a></li>
+            <li><a href="pages/admin.html" class="hover:text-blue-200">Admin Page</a></li>
+            <li><a href="#" class="hover:text-blue-200">Amenities</a></li>
+            <li><a href="#" class="hover:text-blue-200">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-grow">
+      <div class="container mx-auto px-4 py-8">
+        <h2 class="text-4xl font-bold text-center mb-8 text-gray-800">Our Luxurious Rooms</h2>
+
+        <!-- Add search bar -->
+        <div class="mb-8">
+          <input
+            type="text"
+            id="room-search"
+            placeholder="Search rooms..."
+            class="border border-gray-300 rounded-lg px-4 py-2 w-full"
+          />
+        </div>
+
+        <div id="roomList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Room cards will be dynamically inserted here -->
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-wrap justify-between">
+          <div class="w-full md:w-1/3 mb-4 md:mb-0">
+            <h3 class="text-xl font-bold mb-2">Luxury Hotel</h3>
+            <p>123 Luxury Lane, Cityville, State 12345</p>
+            <p>Phone: (123) 456-7890</p>
+          </div>
+          <div class="w-full md:w-1/3 mb-4 md:mb-0">
+            <h3 class="text-xl font-bold mb-2">Quick Links</h3>
+            <ul>
+              <li><a href="#" class="hover:text-blue-300">About Us</a></li>
+              <li><a href="#" class="hover:text-blue-300">Services</a></li>
+              <li><a href="#" class="hover:text-blue-300">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div class="w-full md:w-1/3">
+            <h3 class="text-xl font-bold mb-2">Follow Us</h3>
+            <div class="flex space-x-4">
+              <a href="#" class="hover:text-blue-300">Facebook</a>
+              <a href="#" class="hover:text-blue-300">Twitter</a>
+              <a href="#" class="hover:text-blue-300">Instagram</a>
+            </div>
+          </div>
+        </div>
+        <div class="mt-8 text-center">
+          <p>&copy; 2023 Luxury Hotel. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Lấy dữ liệu từ localStorage
+      function getRoomsFromLocalStorage() {
+        const rooms = localStorage.getItem("hotelRooms");
+        return rooms ? JSON.parse(rooms) : [];
+      }
+
+      // Function to create room cards
+      function createRoomCard(room) {
+        const card = document.createElement("div");
+        card.className =
+          "bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 focus-within:ring-2 focus-within:ring-blue-500";
+        card.tabIndex = "0";
+        card.innerHTML = `
+        <div class="flex flex-col h-full">
+          <div class="w-full h-96 overflow-hidden">
+            <img src="${room.imageUrl}" alt="${room.name}" class="w-full h-full object-cover">
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <h2 class="text-2xl font-semibold mb-2 text-gray-800">${room.name}</h2>
+              <p class="text-gray-600 mb-4">${room.description}</p>
+            </div>
+            <div class="flex justify-center space-x-4 mt-4">
+              <a href="pages/detail.html?id=${room.id}" class="bg-blue-500 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-600 transition-colors duration-300">View Details</a>
+              <button class="bg-green-500 text-white px-6 py-3 rounded-md font-medium hover:bg-green-600 transition-colors duration-300" aria-label="Book ${room.name}">Book Now</button>
+            </div>
+          </div>
+        </div>
+`;
+
+        return card;
+      }
+
+      // Function to filter rooms based on search input
+      function filterRooms(rooms, searchTerm) {
+        return rooms.filter((room) => room.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      }
+
+      // Function to render room cards
+      function renderRoomCards(rooms) {
+        const roomList = document.getElementById("roomList");
+        roomList.innerHTML = ""; // Clear existing room cards
+
+        if (rooms.length > 0) {
+          rooms.forEach((room) => {
+            roomList.appendChild(createRoomCard(room));
+          });
+        } else {
+          const noRoomsMessage = document.createElement("p");
+          noRoomsMessage.textContent = "No rooms found matching your search.";
+          noRoomsMessage.className = "text-center text-gray-600 text-xl col-span-full";
+          roomList.appendChild(noRoomsMessage);
+        }
+      }
+
+      // Function to handle search
+      function handleSearch() {
+        const searchInput = document.getElementById("room-search");
+        const searchTerm = searchInput.value.trim();
+        const allRooms = getRoomsFromLocalStorage();
+
+        const filteredRooms = searchTerm ? filterRooms(allRooms, searchTerm) : allRooms;
+        renderRoomCards(filteredRooms);
+      }
+
+      // Modify the renderHomepageRooms function
+      function renderHomepageRooms() {
+        const rooms = getRoomsFromLocalStorage();
+        renderRoomCards(rooms);
+      }
+
+      // When page loads, render data from localStorage and set up search functionality
+      document.addEventListener("DOMContentLoaded", () => {
+        renderHomepageRooms();
+
+        const searchInput = document.getElementById("room-search");
+        searchInput.addEventListener("input", handleSearch);
+      });
+
+      // Lắng nghe sự kiện storage để cập nhật room list khi localStorage thay đổi
+      window.addEventListener("storage", function (event) {
+        if (event.key === "hotelRooms") {
+          renderHomepageRooms();
+        }
+      });
+    </script>
+  </body>
+</html>
